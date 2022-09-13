@@ -1,0 +1,27 @@
+"2x Speed"
+After playing for a while, a circle will appear in the middle of the screen. If the player can direct the ball to hit this feature. 
+The ball's velocity will increase to 2x which makes it more difficult for the other player to handle.
+
+Let's break it down this feature:
+
+1. "After a while" = when it will appear: we need a "thing" to keep track of time
+It can be a counter. What is the anchor? Like when the game starts or when a specific number of collisions happen (the ball is hit back and forth)
+Let's go with the # of collisions (both top & bottom sides)
+With the counter we can set it will disappear after a specific number of collisions
+
+<--- Coding --->
+We need:
+ 1/ a counter variable to keep track the number of collisions
+ 2/ a function to show the "2x Speed" circle once the counter reaches a specific number - let's set it to 10 for now.
+
+How can we count the number of collisions?
+Maybe by counting the number of the function handle_collision() is called?
+Nope, we can just simply increase collision_counter by 1 whenever it meets the condtion of a collision (paddle and top & bottom sides)
+Let's test to see if this counter is working by printing it on the console
+
+2. "A circle will appear in the middle of the screen"
+We can draw the circle and position it somewhere in the middle of the screen
+
+3. "If the player can direct the ball to hit this feature, the ball's velocity will increase to 2x"
+We can set up the collision condition so that the speed 2x will be in effect.
+

@@ -100,9 +100,9 @@ def handle_paddle_movement(keys, left_paddle, right_paddle):
         right_paddle.move(up=False)
 
 def handle_collision(ball, left_paddle, right_paddle):
+
     if ball.y + ball_radius >= screen_height:
         ball.y_velocity *= -1
-
     elif ball.y - ball.radius <= 0:
         ball.y_velocity *= -1
 
