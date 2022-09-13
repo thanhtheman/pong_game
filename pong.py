@@ -80,24 +80,33 @@ def handle_paddle_movement(keys, left_paddle, right_paddle):
         right_paddle.move(up=False)
 
 def handle_collision(ball, left_paddle, right_paddle):
-    # why does it have to be ">="? Collision means "==" is where the collision really happens
-    # we have to use the ">=" because we measure the "center" position of the ball with exact coordinate value
+
     if ball.y + ball_radius >= screen_height:
         ball.y_velocity *= -1
     elif ball.y - ball.radius <= 0:
         ball.y_velocity *= -1
-    # for the paddle collision, we first need to check the direction of the ball moving to right or left
+
     if ball.x_velocity < 0:
-        # we then to need to check where is the paddle by checking its y value and the paddle height
-        # then we want to check the x value of the ball to see if it is right at the edge of the paddle (paddle.x + paddle_width)
         if ball.y >= left_paddle.y and ball.y <= left_paddle.y + paddle_height:
             if ball.x - ball.radius <= left_paddle.x + paddle_width:
                 ball.x_velocity *= -1
+
+                # dealing with the y bouncing direction, d = difference between center paddle (middle_y) - ball.y
+                middle_y = left_paddle.y + paddle_height / 2
+                difference_in_y = middle_y - ball.y
+                reduction_factor = (paddle_height / 2) / ball.max_velocity
+                collision_y_velocity = difference_in_y / reduction_factor
+                ball.y_velocity = -1 * collision_y_velocity
     else:
         if ball.y >= right_paddle.y and ball.y <= right_paddle.y + paddle_height:
             if ball.x + ball.radius >= right_paddle.x:
                 ball.x_velocity *= -1
 
+                middle_y = right_paddle.y + paddle_height / 2
+                difference_in_y = middle_y - ball.y
+                reduction_factor = (paddle_height / 2) / ball.max_velocity
+                collision_y_velocity = difference_in_y / reduction_factor
+                ball.y_velocity = -1 * collision_y_velocity
 
 
 def main():
