@@ -14,6 +14,9 @@ black = (0, 0, 0)
 paddle_width, paddle_height = 20, 100
 ball_radius = 7
 
+score_font = pygame.font.SysFont('comicsans', 50)
+
+
 class Paddle:
     color = white
     velocity = 4
@@ -38,8 +41,8 @@ class Ball:
     color = white
 
     def __init__(self, x, y, radius):
-        self.x = x
-        self.y = y
+        self.x = self.original_x = x
+        self.y = self.original_y = y
         self.radius = radius
         self.x_velocity = self.max_velocity
         self.y_velocity = 0
@@ -50,11 +53,22 @@ class Ball:
     def move(self):
         self.x += self.x_velocity
         self.y += self.y_velocity
+    
+    def reset(self):
+        self.x = self.original_x
+        self.y = self.original_y
+        self.y_velocity = 0
+        self.x_velocity *= -1
 
 
 
-def draw(win, paddles, ball):
+def draw(win, paddles, ball, left_score, right_score):
     win.fill(black)
+
+    left_score_text = score_font.render(f'{left_score}', 1, white)
+    right_score_text = score_font.render(f'{right_score}', 1, white)
+    win.blit(left_score_text, (screen_width // 4 - left_score_text.get_width() // 2, 20))
+    win.blit(right_score_text, (screen_width * (3/4) - right_score_text.get_width() // 2, 20))
 
     # this draw method is actually from the class paddle, not the general draw method
     for paddle in paddles:
@@ -116,12 +130,15 @@ def main():
     left_paddle = Paddle(10, screen_height//2 - paddle_height//2, paddle_width, paddle_height)
     right_paddle = Paddle(screen_width - 10 - paddle_width, screen_height//2 - paddle_height//2, paddle_width, paddle_height)
     ball = Ball(screen_width//2, screen_height//2, ball_radius)
+    left_score = 0
+    right_score = 0
+
     while run:
         # how fast the loop should run
         clock.tick(fps)
         
         # drawing the screen, the paddle
-        draw(game_screen, [left_paddle, right_paddle], ball)
+        draw(game_screen, [left_paddle, right_paddle], ball, left_score, right_score)
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -137,6 +154,18 @@ def main():
 
         #hanlding the collision
         handle_collision(ball, left_paddle, right_paddle)
+
+        if ball.x > screen_width:
+            left_score += 1
+            ball.reset()
+        elif ball.x < 0:
+            right_score += 1
+            ball.reset()
+        
+        
+
+
+
 
     pygame.quit()
 
